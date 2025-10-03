@@ -1,0 +1,63 @@
+service: message-board-backend
+
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-north-1
+  environment:
+    DYNAMODB_TABLE: messagesTable
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:PutItem
+        - dynamodb:GetItem
+        - dynamodb:Scan
+        - dynamodb:UpdateItem
+      Resource:
+        - arn:aws:dynamodb:eu-north-1:*:table/messagesTable
+
+functions:
+  createMessage:
+    handler: handler.createMessage
+    events:
+      - http:
+          path: messages
+          method: post
+          cors: true
+
+  getMessages:
+    handler: handler.getMessages
+    events:
+      - http:
+          path: messages
+          method: get
+          cors: true
+
+  updateMessage:
+    handler: handler.updateMessage
+    events:
+      - http:
+          path: messages/{id}
+          method: put
+          cors: true
+
+  optionsMessages:
+    handler: handler.optionsHandler
+    events:
+      - http:
+          path: messages
+          method: options
+
+resources:
+  Resources:
+    MessagesTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: messagesTable
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST

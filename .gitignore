@@ -1,0 +1,22 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Build output
+dist/
+build/
+
+# Serverless
+.serverless/
+.webpack/
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# Mac/Windows system files
+.DS_Store
+Thumbs.db
